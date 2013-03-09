@@ -1,0 +1,128 @@
+﻿Version=2.5
+IconFile=
+NumberOfModules=0
+Package=galaxyfreak.rombulidchecker
+DoNotOverwriteManifest=False
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.basic4ppc.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="14"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+UserTypesHint=
+NumberOfFiles=1
+File1=Main.bal
+NumberOfLibraries=2
+Library1=core
+Library2=http
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: Pico ROM Bulid Checker
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+'Activity module
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+Dim hc As HttpClient
+Dim req As HttpRequest
+Dim hclink As HttpClient
+Dim reqlink As HttpRequest
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+Dim ListView1 As ListView
+Dim Label1 As Label	
+Dim EditText1 As EditText
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+Activity.LoadLayout("Main")
+ListView1.Initialize("ListView1")
+	ListView1.SingleLineLayout.ItemHeight = 40dip
+    ListView1.SingleLineLayout.Label.TextSize = 15
+    ListView1.SingleLineLayout.Label.TextColor = Colors.White
+    ListView1.SingleLineLayout.Label.Gravity = Gravity.CENTER
+	ListView1.FastScrollEnabled = True
+ListView1.AddSingleLine("CyanogenMod 10.1")
+ListView1.AddSingleLine("CyanogenMod 10")
+ListView1.AddSingleLine("CyanogenMod 9")
+ListView1.AddSingleLine("MIUI v4.1")
+ListView1.AddSingleLine("Apex Sense ROM")
+ListView1.AddSingleLine("HTC Sense 4.0a")
+Activity.AddView(ListView1, 0, 0, 100%x, 70%y)
+hc.Initialize("hc")
+hclink.Initialize("hclink")
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ListView1_ItemClick (Position As Int, Value As Object)
+    If Value = "CyanogenMod 10.1" Then
+				req.InitializeGet("http://spajky.3owl.com/bulidchecker/cm10.1.txt")
+				hc.Execute(req, 1)
+				reqlink.InitializeGet("http://spajky.3owl.com/bulidchecker/cm10.1-link.txt")
+				hclink.Execute(reqlink, 2)
+	End If
+	    If Value = "CyanogenMod 10" Then
+				req.InitializeGet("http://spajky.3owl.com/bulidchecker/cm10.txt")
+				hc.Execute(req, 1)
+								reqlink.InitializeGet("http://spajky.3owl.com/bulidchecker/cm10-link.txt")
+				hclink.Execute(reqlink, 2)
+				End If
+				    If Value = "CyanogenMod 9" Then
+				req.InitializeGet("http://spajky.3owl.com/bulidchecker/cm9.txt")
+				hc.Execute(req, 1)
+								reqlink.InitializeGet("http://spajky.3owl.com/bulidchecker/cm9-link.txt")
+				hclink.Execute(reqlink, 2)
+End If	
+
+				    If Value = "MIUI V4.1" Then
+				req.InitializeGet("http://spajky.3owl.com/bulidchecker/MIUI4.1.txt")
+				hc.Execute(req, 1)
+								reqlink.InitializeGet("http://spajky.3owl.com/bulidchecker/MIUI4.1-link.txt")
+				hclink.Execute(reqlink, 2)
+End If
+				    If Value = "Apex Sense ROM" Then
+				req.InitializeGet("http://spajky.3owl.com/bulidchecker/ApexSense.txt")
+				hc.Execute(req, 1)
+								reqlink.InitializeGet("http://spajky.3owl.com/bulidchecker/ApexSense-link.txt")
+				hclink.Execute(reqlink, 2)
+End If
+				    If Value = "HTC Sense 4.0a" Then
+				req.InitializeGet("http://spajky.3owl.com/bulidchecker/Sense4.txt")
+				hc.Execute(req, 1)
+								reqlink.InitializeGet("http://spajky.3owl.com/bulidchecker/Sense4-link.txt")
+				hclink.Execute(reqlink, 2)
+End If
+End Sub
+
+Sub hc_ResponseSuccess(Response As HttpResponse, TaskId As Int)
+    Label1.Text = "Newest bulid is: " & Response.GetString("UTF8")
+End Sub
+
+Sub hc_ResponseError(Response As HttpResponse, Reason As String, StatusCode As Int, TaskId As Int)
+    Msgbox("Error in app: " & Response.GetString("UTF8"), "")
+				Response.Release
+End Sub
+Sub hclink_ResponseSuccess(Response As HttpResponse, TaskId As Int)
+    EditText1.Text = Response.GetString("UTF8")
+End Sub
+
+Sub hclink_ResponseError(Response As HttpResponse, Reason As String, StatusCode As Int, TaskId As Int)
+    Msgbox("Error in app: " & Response.GetString("UTF8"), "")
+				Response.Release
+End Sub
